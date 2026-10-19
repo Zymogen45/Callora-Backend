@@ -113,8 +113,8 @@ export class InMemoryDurableDeliveryStore implements DurableDeliveryStore {
     current.lastError = sanitizeError(error)
     current.workerId = null
     current.leaseExpiresAt = null
-    current.status = current.attemptCount >= current.maxAttempts ? 'dead' : 'retrying'
-    current.nextAttemptAt = current.status === 'dead' ? now : now + current.baseDelayMs * 2 ** Math.max(0, current.attemptCount - 1)
+    current.status = current.attemptCount >= (current.maxAttempts ?? 5) ? 'dead' : 'retrying'
+    current.nextAttemptAt = current.status === 'dead' ? now : now + (current.baseDelayMs ?? 1000) * 2 ** Math.max(0, current.attemptCount - 1)
     current.updatedAt = now
     return clone(current)
   }

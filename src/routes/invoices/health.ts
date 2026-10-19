@@ -12,17 +12,17 @@
 
 import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import { config as defaultConfig } from '../../../src/config/index.ts';
+import { config as defaultConfig } from '../../config/index.js';
 import {
   checkDatabase,
   checkSorobanRpc,
   checkHorizon,
   determineOverallStatus,
   type ComponentCheck,
-} from '../../../src/services/healthCheck.ts';
-import type { HealthCheckConfig } from '../../../src/services/healthCheck.ts';
-import { logger } from '../../../src/logger.ts';
-import { getRequestId, successEnvelope, errorEnvelope } from '../../../src/lib/envelope.js';
+} from '../../services/healthCheck.js';
+import type { HealthCheckConfig } from '../../services/healthCheck.js';
+import { logger } from '../../logger.js';
+import { getRequestId, successEnvelope, errorEnvelope } from '../../lib/envelope.js';
 
 /** Status of a single external dependency. */
 export interface DependencyEntry {
@@ -104,7 +104,7 @@ export function createInvoicesHealthRouter(deps: InvoicesHealthDeps = {}): Route
       const dependencies: Record<string, DependencyEntry> = {};
 
       const [dbCheck, sorobanCheck, horizonCheck] = await Promise.all([
-        checkDatabase(config.database.pool, config.database.timeout),
+        checkDatabase(config.database.pool as never, config.database.timeout),
         config.sorobanRpc
           ? checkSorobanRpc(config.sorobanRpc.url, config.sorobanRpc.timeout)
           : Promise.resolve(undefined),

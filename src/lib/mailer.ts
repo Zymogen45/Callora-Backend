@@ -24,6 +24,10 @@ let mailerOptions: MailerOptions = {
   transport: (process.env.MAILER_TRANSPORT as 'console' | 'smtp') ?? 'console',
 };
 
+export function getMailerOptions(): MailerOptions {
+  return { ...mailerOptions };
+}
+
 export function configureMailer(options: Partial<MailerOptions>): void {
   mailerOptions = { ...mailerOptions, ...options };
 }
@@ -43,7 +47,8 @@ export async function sendMail(payload: MailPayload): Promise<void> {
   if (mailerOptions.transport === 'smtp') {
     let nodemailer: any;
     try {
-      nodemailer = await import('nodemailer');
+      const moduleName = 'nodemailer'; // optional dependency, resolved at runtime
+      nodemailer = await import(moduleName);
     } catch {
       logger.warn('[mailer] nodemailer not installed, falling back to console transport');
       logToConsole(payload);
@@ -64,14 +69,17 @@ export async function sendMail(payload: MailPayload): Promise<void> {
     return;
   }
 
-  logToConsole(payload);
+  logToConsole(payload, mailerOptions.transport === 'console' && process.env.NODE_ENV === 'production');
 }
 
-function logToConsole(payload: MailPayload): void {
-  logger.info('[mailer] Email notification', {
+function logToConsole(payload: MailPayload, omitBody = false): void {
+  const entry: Record<string, unknown> = {
     from: mailerOptions.from,
     to: payload.to,
     subject: payload.subject,
-    body: payload.text,
-  });
+  };
+  if (!omitBody) {
+    entry.body = payload.text;
+  }
+  logger.info('[mailer] Email notification', entry);
 }

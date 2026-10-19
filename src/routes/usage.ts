@@ -69,12 +69,12 @@ export function createUsageRouter(deps: UsageRouterDeps): Router {
 
     const queryResult = UsageQuerySchema.safeParse(req.query);
     if (!queryResult.success) {
-      logger.warn('Usage API input validation failed', { correlationId, errors: queryResult.error.errors });
+      logger.warn('Usage API input validation failed', { correlationId, errors: queryResult.error.issues });
       return res.status(400).json({
         error: {
           code: 'BAD_REQUEST',
           message: 'Invalid query parameters provided.',
-          details: queryResult.error.errors
+          details: queryResult.error.issues
         }
       });
     }

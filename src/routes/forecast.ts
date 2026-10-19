@@ -344,7 +344,7 @@ export function createForecastRouter(timeoutMs = 5_000): Router {
     validate({ query: listForecastQuerySchema }),
     (req: Request, res: Response, next: NextFunction) => {
       try {
-        const requestId = getRequestId(req) ?? 'unknown';
+        const requestId = getRequestId() ?? 'unknown';
 
         const { limit, cursor: rawCursor } = listForecastQuerySchema.parse(req.query);
 
@@ -415,7 +415,7 @@ export function createForecastRouter(timeoutMs = 5_000): Router {
         name: forecast.name,
       });
 
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       res.status(201).json(successEnvelope(forecast, requestId));
     }),
   );
@@ -434,7 +434,7 @@ export function createForecastRouter(timeoutMs = 5_000): Router {
         throw new NotFoundError(`Forecast ${id} not found`);
       }
 
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       res.json(successEnvelope(forecast, requestId));
     }),
   );
@@ -461,7 +461,7 @@ export function createForecastRouter(timeoutMs = 5_000): Router {
         updates: Object.keys(input).filter((k) => input[k as keyof UpdateForecastInput] !== undefined),
       });
 
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       res.json(successEnvelope(updated, requestId));
     }),
   );
@@ -486,7 +486,7 @@ export function createForecastRouter(timeoutMs = 5_000): Router {
         forecastId: id,
       });
 
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       res.status(204).json(successEnvelope({ success: true }, requestId));
     }),
   );

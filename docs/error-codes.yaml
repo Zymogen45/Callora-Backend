@@ -385,3 +385,27 @@ error_codes:
   - code: COMPONENT_NOT_CONFIGURED
     section: Health / dependency probes
     description: A required system component is not configured
+
+  - code: INVALID_ENTRY_ID
+    section: Audit, logs and quotas
+    description: Audit replay: the audit entry id is malformed
+
+  - code: AUDIT_ENTRY_NOT_FOUND
+    section: Audit, logs and quotas
+    description: Audit replay: no audit entry exists with the given id
+
+  - code: AUDIT_ACTION_NOT_REPLAYABLE
+    section: Audit, logs and quotas
+    description: Audit replay: the recorded action cannot be replayed
+
+  - code: AUDIT_DETAILS_INCOMPLETE
+    section: Audit, logs and quotas
+    description: Audit replay: the recorded details are insufficient to replay the action
+
+  - code: LOG_ENTRY_NOT_FOUND
+    section: Audit, logs and quotas
+    description: The requested log entry does not exist
+
+  - code: BULK_QUOTA_UPDATE_FAILED
+    section: Audit, logs and quotas
+    description: A bulk quota update failed and was rolled back

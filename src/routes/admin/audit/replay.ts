@@ -362,14 +362,14 @@ export function createAdminAuditReplayRouter(
         const originalEntryId =
           typeof req.body?.entryId === 'string' ? req.body.entryId.trim() : undefined;
         if (originalEntryId) {
-          recordReplayAttempt(req, res, {
+          void Promise.resolve(recordReplayAttempt(req, res, {
             originalEntryId,
             originalEvent: undefined,
             outcome: 'error',
             replayedAt: replayedAt.toISOString(),
             errorCode: error.code,
             errorMessage: error.message,
-          }).catch(() => undefined);
+          })).catch(() => undefined);
         }
         next(error);
         return;

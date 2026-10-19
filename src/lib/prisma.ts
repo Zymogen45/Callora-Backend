@@ -3,7 +3,8 @@ import { PrismaPg } from '@prisma/adapter-pg';
 
 type PrismaClientLike = {
   $disconnect: () => Promise<void>;
-  [key: string]: unknown;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
 };
 
 let prisma: PrismaClientLike | undefined;

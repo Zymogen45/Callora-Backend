@@ -129,7 +129,7 @@ function handlePreflight(
   );
   res.setHeader(
     'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, x-admin-api-key, x-request-id',
+    'Content-Type, Authorization, Idempotency-Key, If-None-Match, X-Correlation-Id, x-request-id',
   );
   res.setHeader(
     'Access-Control-Max-Age',
@@ -168,6 +168,14 @@ export function createCorsAllowlistMiddleware(
     // Pull the request id through the canonical helper so the envelope and
     // the structured warning line up byte-for-byte.
     const requestId = getRequestId(req as Request & { headers: Record<string, string | string[] | undefined> });
+
+    if (!origin && process.env.CORS_ALLOW_MISSING_ORIGIN === 'true') {
+      // Non-browser clients (curl, server-to-server) send no Origin header.
+      // CORS is a browser-enforced policy, so these may be let through when
+      // explicitly enabled (used by the public demo deployment).
+      next();
+      return;
+    }
 
     if (!origin) {
       logger.warn('[cors] missing Origin header', {

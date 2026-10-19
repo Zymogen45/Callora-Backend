@@ -61,7 +61,7 @@ function getAuditContext(req: Request) {
     clientIp: 'unknown',
     userAgent: undefined,
     tenantId: null,
-    correlationId: getRequestId(req),
+    correlationId: getRequestId(),
     bodyHash: null,
   };
 }
@@ -81,7 +81,7 @@ async function recordErrorAudit(
       tenantId: (ctx.tenantId as string | null) ?? null,
       clientIp: (ctx.clientIp as string | null) ?? null,
       userAgent: (ctx.userAgent as string | null) ?? null,
-      correlationId: (ctx.correlationId as string | null) ?? getRequestId(req) ?? null,
+      correlationId: (ctx.correlationId as string | null) ?? getRequestId() ?? null,
       bodyHash: (ctx.bodyHash as string | null) ?? null,
       details,
     });
@@ -125,7 +125,7 @@ export function createErrorsRouter(deps: ErrorsRouterDeps = {}): Router {
   router.get(
     '/',
     asyncHandler(async (req, res) => {
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       const records = Array.from(errorStore.values());
       res.json(successEnvelope({ errors: records }, requestId));
     }),
@@ -141,7 +141,7 @@ export function createErrorsRouter(deps: ErrorsRouterDeps = {}): Router {
       if (!record) {
         throw new NotFoundError(`Error definition ${req.params.id} not found`);
       }
-      const requestId = getRequestId(req) ?? 'unknown';
+      const requestId = getRequestId() ?? 'unknown';
       res.json(successEnvelope(record, requestId));
     }),
   );
@@ -176,7 +176,7 @@ export function createErrorsRouter(deps: ErrorsRouterDeps = {}): Router {
 
       // Audit after successful mutation
       const actor = user.id;
-      const correlationId = getRequestId(req) ?? 'unknown';
+      const correlationId = getRequestId() ?? 'unknown';
 
       await recordErrorAudit(req, auditService, 'ERROR_CREATE', actor, {
         errorId: id,
@@ -223,7 +223,7 @@ export function createErrorsRouter(deps: ErrorsRouterDeps = {}): Router {
     errorStore.set(id, updatedRecord);
 
     const actor = user.id;
-    const correlationId = getRequestId(req) ?? 'unknown';
+    const correlationId = getRequestId() ?? 'unknown';
 
     // Persist audit record
     await recordErrorAudit(req, auditService, 'ERROR_UPDATE', actor, {
@@ -265,7 +265,7 @@ export function createErrorsRouter(deps: ErrorsRouterDeps = {}): Router {
       errorStore.delete(id);
 
       const actor = user.id;
-      const correlationId = getRequestId(req) ?? 'unknown';
+      const correlationId = getRequestId() ?? 'unknown';
 
       // Persist audit record
       await recordErrorAudit(req, auditService, 'ERROR_DELETE', actor, {

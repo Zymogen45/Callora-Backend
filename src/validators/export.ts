@@ -12,6 +12,7 @@ export const exportsQuerySchema = z.object({
     .optional()
     .transform((val) => (val ? parseInt(val, 10) : 0))
     .pipe(z.number().int().min(0)),
+  cursor: z.string().trim().min(1).max(2048).optional(),
   developerId: z.string().trim().min(1).max(255).optional(),
   format: z.enum(['csv', 'json']).optional(),
 });

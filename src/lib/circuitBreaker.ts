@@ -13,6 +13,7 @@
  */
 
 import { CircuitBreakerOpenError, BadRequestError } from './errors.js';
+export { CircuitBreakerOpenError };
 import { logger } from '../logger.js';
 import type { PersistentRateLimiterPool } from '../services/rateLimiter.js';
 import client from 'prom-client';
@@ -62,7 +63,7 @@ export class InMemoryCircuitBreakerStore implements CircuitBreakerStore {
   }
 }
 
-const DEFAULT_CONFIG: Required<CircuitBreakerConfig> = {
+const DEFAULT_CONFIG: Required<Omit<CircuitBreakerConfig, 'onOpenError'>> = {
   failureThreshold: 5,
   cooldownMs: 30000,
   successThreshold: 1,
@@ -271,7 +272,7 @@ const DEFAULT_METRICS: CircuitBreakerMetrics = {
  */
 export class CircuitBreaker {
   private readonly store: CircuitBreakerStore;
-  private readonly config: Required<CircuitBreakerConfig>;
+  private readonly config: Required<Omit<CircuitBreakerConfig, 'onOpenError'>> & Pick<CircuitBreakerConfig, 'onOpenError'>;
   // Tracks which breakers have an active trial call in half-open state
   private readonly activeTrials = new Set<string>();
 

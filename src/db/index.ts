@@ -4,6 +4,7 @@ import * as schema from './schema.js';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { applyMigrations, validateSchemaState } from '../migrate.js';
+import { bootstrapDemoDb } from './demo.js';
 
 const logger = console;
 let sqliteClosed = false;
@@ -13,7 +14,7 @@ let sqliteClosed = false;
  * The underlying connection is exported for the small number of repository
  * operations that must run synchronously in a SQLite transaction.
  */
-export const sqlite = new Database('./database.db');
+export const sqlite = new Database(process.env.SQLITE_PATH ?? './database.db');
 
 // Create Drizzle instance with schema
 export const db = drizzle(sqlite, { schema });
@@ -26,6 +27,11 @@ export async function initializeDb() {
     // In production, we just want to validate the schema is up-to-date.
     // In dev/test environments, we automatically apply pending migrations.
     const isProd = process.env.NODE_ENV === 'production';
+
+    if (process.env.DEMO_MODE === 'true') {
+      bootstrapDemoDb(sqlite, migrationDir);
+      return;
+    }
     
     if (isProd) {
       logger.info('Validating schema state...');

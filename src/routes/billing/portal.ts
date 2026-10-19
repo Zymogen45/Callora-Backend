@@ -39,6 +39,7 @@ export interface PrismaInvoice {
 export interface PrismaQueryArgs {
   where?: Record<string, unknown>;
   include?: Record<string, unknown>;
+  select?: Record<string, unknown>;
   orderBy?: Record<string, unknown>[];
   take?: number;
 }

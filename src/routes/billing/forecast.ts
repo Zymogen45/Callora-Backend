@@ -55,7 +55,7 @@ const getBillingForecastQuerySchema = z.object({
     ),
   period: z
     .enum(['month', 'next_30_days', 'week', 'day'], {
-      errorMap: () => ({ message: 'period must be one of: month, next_30_days, week, day' }),
+      error: 'period must be one of: month, next_30_days, week, day',
     })
     .optional()
     .default('month'),
@@ -174,7 +174,7 @@ export function createBillingForecastRouter(deps: BillingForecastRouterDeps = {}
         const dailyRunRate = windowSpent / lookbackDays;
         const forecastedAmount = dailyRunRate * forecastDays;
 
-        const requestId = getRequestId(req) ?? 'unknown';
+        const requestId = getRequestId() ?? 'unknown';
 
         logger.info(
           `Billing forecast generated for user ${user.id}: lookbackDays=${lookbackDays}, period=${period}, dailyRunRate=${dailyRunRate.toFixed(4)} USDC, forecastedAmount=${forecastedAmount.toFixed(4)} USDC`,

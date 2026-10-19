@@ -277,7 +277,25 @@ export const ErrorCode = {
   AUTH_NOT_IMPLEMENTED: "AUTH_NOT_IMPLEMENTED",
 
   /** A required system component is not configured */
-  COMPONENT_NOT_CONFIGURED: "COMPONENT_NOT_CONFIGURED"
+  COMPONENT_NOT_CONFIGURED: "COMPONENT_NOT_CONFIGURED",
+
+  /** Audit replay: the audit entry id is malformed */
+  INVALID_ENTRY_ID: "INVALID_ENTRY_ID",
+
+  /** Audit replay: no audit entry exists with the given id */
+  AUDIT_ENTRY_NOT_FOUND: "AUDIT_ENTRY_NOT_FOUND",
+
+  /** Audit replay: the recorded action cannot be replayed */
+  AUDIT_ACTION_NOT_REPLAYABLE: "AUDIT_ACTION_NOT_REPLAYABLE",
+
+  /** Audit replay: the recorded details are insufficient to replay the action */
+  AUDIT_DETAILS_INCOMPLETE: "AUDIT_DETAILS_INCOMPLETE",
+
+  /** The requested log entry does not exist */
+  LOG_ENTRY_NOT_FOUND: "LOG_ENTRY_NOT_FOUND",
+
+  /** A bulk quota update failed and was rolled back */
+  BULK_QUOTA_UPDATE_FAILED: "BULK_QUOTA_UPDATE_FAILED"
 
 } as const;
 

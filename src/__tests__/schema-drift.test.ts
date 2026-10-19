@@ -25,7 +25,7 @@ describe('Schema Drift Audit', () => {
    * - Other Postgres tables (usage, settlements, etc.) are owned by raw SQL in code
    *   and are out-of-scope for the SQLite drift checks here.
    *
-   * Any future change MUST update SCHEMA_DRIFT_AUDIT.md and these expectations.
+   * Any future change MUST update docs/guides/SCHEMA_DRIFT_AUDIT.md and these expectations.
    */
   const OWNERSHIP = {
     drizzleSqliteTables: new Set(['developers', 'apis', 'api_endpoints', 'schema_versions']),

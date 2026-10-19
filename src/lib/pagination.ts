@@ -42,10 +42,12 @@ const MAX_LIMIT = 100;
  * Throws ValidationError for present-but-invalid values.
  */
 function parseIntParam(
-  raw: string | undefined,
+  rawInput: string | number | undefined,
   field: string,
   { min, max }: { min?: number; max?: number } = {},
 ): number | undefined {
+  // The OpenAPI validator may coerce numeric query params to numbers.
+  const raw = typeof rawInput === 'number' ? String(rawInput) : rawInput;
   if (raw === undefined || raw.trim() === '') return undefined;
 
   const trimmed = raw.trim();
@@ -105,7 +107,7 @@ export function parsePagination(query: {
  * Supports cursor parameter for keyset pagination
  */
 export function parseCursorPagination(query: {
-  limit?: string;
+  limit?: string | number;
   cursor?: string;
 }): CursorPaginationParams {
   const rawLimit = parseIntParam(query.limit, 'limit', { min: 1 });

@@ -22,6 +22,9 @@ export interface AuditRowInput {
 export interface AuditRow extends AuditRowInput {
   id: string;
   createdAt: string;
+  sequenceNo?: number;
+  previousHash?: string;
+  integrityHash?: string;
 }
 
 function sanitizeWebhookConfig(
@@ -153,3 +156,36 @@ export async function appendAuditRow(input: AuditRowInput): Promise<AuditRow> {
     integrityHash,
   };
 }
+
+/** Event-style audit record accepted by the per-endpoint audit helpers. */
+export interface AuditRecordInput {
+  event: string;
+  actor: string;
+  tenantId?: string | null;
+  clientIp?: string | null;
+  userAgent?: string | null;
+  correlationId?: string | null;
+  bodyHash?: string | null;
+  details?: Record<string, unknown>;
+}
+
+export interface AuditService {
+  record(input: AuditRecordInput): Promise<void>;
+}
+
+/** Default service: persists through the tamper-evident `appendAuditRow` writer. */
+export const defaultAuditService: AuditService = {
+  async record(input) {
+    await appendAuditRow({
+      actor: input.actor,
+      action: input.event,
+      before: null,
+      after: input.details ?? null,
+      tenantId: input.tenantId ?? null,
+      clientIp: input.clientIp ?? null,
+      userAgent: input.userAgent ?? null,
+      correlationId: input.correlationId ?? null,
+      bodyHash: input.bodyHash ?? null,
+    });
+  },
+};

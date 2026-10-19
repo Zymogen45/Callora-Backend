@@ -102,6 +102,12 @@ This section is generated from `docs/error-codes.yaml`. Run `npm run error-codes
 | `MISSING_AUTH_FIELDS` | Auth |
 | `AUTH_NOT_IMPLEMENTED` | Auth |
 | `COMPONENT_NOT_CONFIGURED` | Health / dependency probes |
+| `INVALID_ENTRY_ID` | Audit, logs and quotas |
+| `AUDIT_ENTRY_NOT_FOUND` | Audit, logs and quotas |
+| `AUDIT_ACTION_NOT_REPLAYABLE` | Audit, logs and quotas |
+| `AUDIT_DETAILS_INCOMPLETE` | Audit, logs and quotas |
+| `LOG_ENTRY_NOT_FOUND` | Audit, logs and quotas |
+| `BULK_QUOTA_UPDATE_FAILED` | Audit, logs and quotas |
 <!-- END GENERATED ERROR CODES -->
 
 ## Scope and important caveats

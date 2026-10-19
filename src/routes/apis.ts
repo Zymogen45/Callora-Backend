@@ -1,4 +1,4 @@
-import { Router, type Response } from 'express';
+import { Router, type Response, type NextFunction } from 'express';
 import { BadRequestError, NotFoundError, UnauthorizedError } from '../errors/index.js';
 import { parsePagination, paginatedResponse, parseCursorPagination, decodeCursor, generateCursor, cursorPaginatedResponse } from '../lib/pagination.js';
 import { apiStatusEnum, type ApiStatus } from '../db/schema.js';
@@ -97,7 +97,7 @@ export function createApisRouter(deps: ApisRouterDeps = {}): Router {
    * Captures the full request lifecycle and records the duration to the histogram
    * with method and status code labels.
    */
-  const recordApisTimingMiddleware = (req: Request, res: Response, next) => {
+  const recordApisTimingMiddleware = (req: Request, res: Response, next: NextFunction) => {
     const startTime = Date.now();
 
     res.on('finish', () => {

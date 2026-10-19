@@ -252,9 +252,10 @@ export const config = {
   },
 
   bcrypt: {
-    costFactor: env.BCRYPT_COST_FACTOR,
+    // Number of bcrypt hashing rounds (BCRYPT_COST_FACTOR, defaults to 12).
+    rounds: env.BCRYPT_COST_FACTOR,
   },
-  billingTimeoutMs: env.BILLING_TIMEOUT_MS,
+  billingTimeoutMs: Number(process.env.BILLING_TIMEOUT_MS ?? 5000),
 
   billingConcurrency: {
     maxPerDeveloper: env.BILLING_MAX_CONCURRENCY_PER_DEV,

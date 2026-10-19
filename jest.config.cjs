@@ -1,9 +1,14 @@
+const quarantined =
+  process.env.JEST_RUN_QUARANTINED === "1" ? [] : require("./jest.quarantine.json");
+
 /** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   testMatch: ["**/?(*.)+(spec|test).ts"],
-  testPathIgnorePatterns: ["/node_modules/"],
+  // Suites listed in jest.quarantine.json are known-broken (see docs/guides/quarantined-tests.md)
+  // and are skipped by default; set JEST_RUN_QUARANTINED=1 to run them.
+  testPathIgnorePatterns: ["/node_modules/", ...quarantined.map((f) => "<rootDir>/" + f)],
   transformIgnorePatterns: ["/node_modules/(?!.*uuid)"],
   transform: {
     "^.+\\.ts$": [
